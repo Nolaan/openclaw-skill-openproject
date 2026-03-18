@@ -1,6 +1,6 @@
 ---
 name: openproject-by-altf1be
-description: "OpenProject CRUD skill — manage work packages, projects, users, relations, time entries, comments, attachments, wiki pages, statuses, and more via OpenProject API v3 with API token auth. Supports cloud and self-hosted instances."
+description: "OpenProject CRUD skill — manage work packages, projects, users, relations, notifications, time entries, comments, attachments, wiki pages, statuses, and more via OpenProject API v3 with API token auth. Supports cloud and self-hosted instances."
 homepage: https://github.com/ALT-F1-OpenClaw/openclaw-skill-openproject
 metadata:
   {"openclaw": {"emoji": "📊", "requires": {"env": ["OP_HOST", "OP_API_TOKEN"]}, "optional": {"env": ["OP_DEFAULT_PROJECT", "OP_MAX_RESULTS", "OP_MAX_FILE_SIZE"]}, "primaryEnv": "OP_HOST"}}
@@ -8,7 +8,7 @@ metadata:
 
 # OpenProject by @altf1be
 
-Manage OpenProject work packages, projects, users, relations, time entries, comments, attachments, wiki pages, and workflow transitions via the API v3. Works with both cloud and self-hosted instances.
+Manage OpenProject work packages, projects, users, relations, notifications, time entries, comments, attachments, wiki pages, and workflow transitions via the API v3. Works with both cloud and self-hosted instances.
 
 ## Setup
 
@@ -120,6 +120,27 @@ node {baseDir}/scripts/openproject.mjs user-read --id 5
 
 # Show current authenticated user
 node {baseDir}/scripts/openproject.mjs user-me
+```
+
+### Notifications
+
+```bash
+# List notifications (all or unread only)
+node {baseDir}/scripts/openproject.mjs notification-list
+node {baseDir}/scripts/openproject.mjs notification-list --unread
+node {baseDir}/scripts/openproject.mjs notification-list --reason mentioned --project 5
+
+# Read notification details
+node {baseDir}/scripts/openproject.mjs notification-read --id 100
+
+# Mark as read (single or all)
+node {baseDir}/scripts/openproject.mjs notification-mark-read --id 100
+node {baseDir}/scripts/openproject.mjs notification-mark-read --all
+node {baseDir}/scripts/openproject.mjs notification-mark-read --all --project 5
+
+# Mark as unread
+node {baseDir}/scripts/openproject.mjs notification-mark-unread --id 100
+node {baseDir}/scripts/openproject.mjs notification-mark-unread --all
 ```
 
 ### Relations

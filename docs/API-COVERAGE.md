@@ -2,7 +2,7 @@
 
 This document lists all 55 API v3 resources, what this skill covers, and what's excluded with reasons.
 
-## ✅ Covered (16 resources)
+## ✅ Covered (17 resources)
 
 | Resource | Commands | Notes |
 |----------|----------|-------|
@@ -12,6 +12,7 @@ This document lists all 55 API v3 resources, what this skill covers, and what's 
 | `attachments` | attachment-list, attachment-add, attachment-delete | Upload/delete on work packages |
 | `time_entries` | time-list, time-create, time-update, time-delete | Full CRUD |
 | `users` | user-list, user-read, user-me | List/search users, view details, current user |
+| `notifications` | notification-list, notification-read, notification-mark-read, notification-mark-unread | List/read/mark with reason/project/WP filters |
 | `relations` | relation-list, relation-read, relation-create, relation-update, relation-delete | Full CRUD with type/WP filters |
 | `wiki_pages` | wiki-read, wiki-attachment-list, wiki-attachment-add | Read page, list & upload attachments |
 | `statuses` | status-list | List all statuses; transitions via wp-update --status |
@@ -27,9 +28,6 @@ This document lists all 55 API v3 resources, what this skill covers, and what's 
 
 ### Meetings (`/api/v3/meetings`)
 - **Reason:** Enterprise-only feature. Requires OpenProject Enterprise edition. Not available on Community edition instances.
-
-### Notifications (`/api/v3/notifications`)
-- **Reason:** Read-only, user-specific in-app notifications. Low value for CLI automation — better consumed via OpenProject UI or email.
 
 ### Queries (`/api/v3/queries`)
 - **Reason:** Saved work package filters/views. Internal to OpenProject UI. CLI users can use `wp-list` filters directly instead.
@@ -119,7 +117,6 @@ This document lists all 55 API v3 resources, what this skill covers, and what's 
 
 | Resource | Priority | Why |
 |----------|----------|-----|
-| Notifications | Medium | Could be useful for monitoring, but mostly a UI concern |
 | News | Low | If write API becomes available |
 
 ## Enterprise-Only Features (Not Available on Community Edition)
@@ -134,4 +131,4 @@ These require an OpenProject Enterprise license:
 ---
 
 *Based on OpenProject API v3 specification (55 resources, 193 endpoints)*
-*Last updated: 2026-03-18*
+*Last updated: 2026-03-18 (v1.5.0)*

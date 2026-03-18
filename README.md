@@ -31,6 +31,7 @@ By [Abdelkrim BOUJRAF](https://www.alt-f1.be) / ALT-F1 SRL, Brussels 🇧🇪 �
 - **Projects** — List, read, create
 - **Users** — List, search, read user details, view current user
 - **Relations** — Create, read, update, delete relations between work packages (blocks, follows, precedes, etc.)
+- **Notifications** — List, read, mark read/unread with filters (reason, project, work package)
 - **Comments** — List and add comments on work packages
 - **Attachments** — List, upload, and delete
 - **Time Entries** — CRUD time tracking with hours, dates, and activity types
@@ -74,7 +75,7 @@ node scripts/openproject.mjs wp-create --project my-project --subject "My first 
 
 See [SKILL.md](./SKILL.md) for full command reference.
 
-### 38 commands across 10 entities:
+### 42 commands across 11 entities:
 
 | Entity | Commands |
 |--------|----------|
@@ -82,6 +83,7 @@ See [SKILL.md](./SKILL.md) for full command reference.
 | Projects | `project-list`, `project-read`, `project-create` |
 | Users | `user-list`, `user-read`, `user-me` |
 | Relations | `relation-list`, `relation-read`, `relation-create`, `relation-update`, `relation-delete` |
+| Notifications | `notification-list`, `notification-read`, `notification-mark-read`, `notification-mark-unread` |
 | Comments | `comment-list`, `comment-add` |
 | Attachments | `attachment-list`, `attachment-add`, `attachment-delete` |
 | Time Entries | `time-list`, `time-create`, `time-update`, `time-delete` |

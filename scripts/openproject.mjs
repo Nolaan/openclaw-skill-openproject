@@ -717,6 +717,110 @@ async function cmdCategoryList(options) {
   console.log(`\n${resp._embedded.elements.length} category/categories`);
 }
 
+// ── Notification commands ────────────────────────────────────────────────────
+
+function reasonEmoji(reason) {
+  const map = {
+    assigned: '👤', commented: '💬', created: '🆕', dateAlert: '📅',
+    mentioned: '📣', prioritized: '⚡', processed: '⚙️', responsible: '🎯',
+    subscribed: '🔔', scheduled: '🗓️', watched: '👁️',
+  };
+  return map[reason] || '🔔';
+}
+
+async function cmdNotificationList(options) {
+  const filters = [];
+
+  if (options.reason) {
+    filters.push({ reason: { operator: '=', values: [options.reason] } });
+  }
+  if (options.project) {
+    filters.push({ project: { operator: '=', values: [options.project] } });
+  }
+  if (options.unread) {
+    filters.push({ readIAN: { operator: '=', values: ['f'] } });
+  }
+  if (options.wpId) {
+    filters.push({ resourceId: { operator: '=', values: [options.wpId] } });
+  }
+
+  const filterParam = filters.length ? `&filters=${encodeURIComponent(JSON.stringify(filters))}` : '';
+  const resp = await opFetch(`/notifications?pageSize=${CFG.maxResults}${filterParam}&sortBy=[["createdAt","desc"]]`);
+
+  if (!resp._embedded.elements.length) {
+    console.log('No notifications found.');
+    return;
+  }
+
+  for (const n of resp._embedded.elements) {
+    const emoji = reasonEmoji(n.reason);
+    const read = n.readIAN ? '  ' : '🔵';
+    const actor = halLink(n, 'actor');
+    const resource = halLink(n, 'resource');
+    const project = halLink(n, 'project');
+    const created = n.createdAt?.substring(0, 16).replace('T', ' ') || '?';
+    console.log(`${read} ${emoji}  #${String(n.id).padEnd(8)}  ${n.reason.padEnd(12)}  ${actor.padEnd(20)}  ${resource.padEnd(30)}  ${project}  ${created}`);
+  }
+
+  const unreadCount = resp._embedded.elements.filter(n => !n.readIAN).length;
+  console.log(`\n${resp._embedded.elements.length} of ${resp.total} notification(s)${unreadCount ? ` (${unreadCount} unread)` : ''}`);
+}
+
+async function cmdNotificationRead(options) {
+  if (!options.id) {
+    console.error('ERROR: --id is required');
+    process.exit(1);
+  }
+
+  const n = await opFetch(`/notifications/${options.id}`);
+
+  const emoji = reasonEmoji(n.reason);
+  console.log(`${emoji} Notification #${n.id}`);
+  console.log(`   Reason:      ${n.reason}`);
+  console.log(`   Read:        ${n.readIAN ? 'Yes' : 'No'}`);
+  console.log(`   Actor:       ${halLink(n, 'actor')}`);
+  console.log(`   Resource:    ${halLink(n, 'resource')}`);
+  console.log(`   Project:     ${halLink(n, 'project')}`);
+  console.log(`   Created:     ${n.createdAt?.substring(0, 16).replace('T', ' ') || '?'}`);
+  console.log(`   Updated:     ${n.updatedAt?.substring(0, 16).replace('T', ' ') || '?'}`);
+}
+
+async function cmdNotificationMarkRead(options) {
+  if (options.all) {
+    const filters = [];
+    if (options.project) {
+      filters.push({ project: { operator: '=', values: [options.project] } });
+    }
+    const filterParam = filters.length ? `?filters=${encodeURIComponent(JSON.stringify(filters))}` : '';
+    await opFetch(`/notifications/read_ian${filterParam}`, { method: 'POST' });
+    console.log('✅ All matching notifications marked as read');
+  } else if (options.id) {
+    await opFetch(`/notifications/${options.id}/read_ian`, { method: 'POST' });
+    console.log(`✅ Notification #${options.id} marked as read`);
+  } else {
+    console.error('ERROR: --id or --all is required');
+    process.exit(1);
+  }
+}
+
+async function cmdNotificationMarkUnread(options) {
+  if (options.all) {
+    const filters = [];
+    if (options.project) {
+      filters.push({ project: { operator: '=', values: [options.project] } });
+    }
+    const filterParam = filters.length ? `?filters=${encodeURIComponent(JSON.stringify(filters))}` : '';
+    await opFetch(`/notifications/unread_ian${filterParam}`, { method: 'POST' });
+    console.log('✅ All matching notifications marked as unread');
+  } else if (options.id) {
+    await opFetch(`/notifications/${options.id}/unread_ian`, { method: 'POST' });
+    console.log(`✅ Notification #${options.id} marked as unread`);
+  } else {
+    console.error('ERROR: --id or --all is required');
+    process.exit(1);
+  }
+}
+
 // ── User commands ────────────────────────────────────────────────────────────
 
 async function cmdUserList(options) {
@@ -1013,7 +1117,7 @@ const program = new Command();
 program
   .name('openproject')
   .description('OpenClaw OpenProject Skill — project management via API v3')
-  .version('1.4.0');
+  .version('1.5.0');
 
 // Work Packages
 program.command('wp-list').description('List work packages')
@@ -1146,6 +1250,30 @@ program.command('user-read').description('Read user details')
 
 program.command('user-me').description('Show current authenticated user')
   .action(wrap(cmdUserMe));
+
+// Notifications
+program.command('notification-list').description('List notifications')
+  .option('--unread', 'Show only unread notifications')
+  .option('--reason <reason>', 'Filter by reason (assigned, commented, mentioned, watched, ...)')
+  .option('-p, --project <id>', 'Filter by project ID')
+  .option('--wp-id <id>', 'Filter by work package ID')
+  .action(wrap(cmdNotificationList));
+
+program.command('notification-read').description('Read notification details')
+  .requiredOption('--id <id>', 'Notification ID')
+  .action(wrap(cmdNotificationRead));
+
+program.command('notification-mark-read').description('Mark notification(s) as read')
+  .option('--id <id>', 'Notification ID')
+  .option('--all', 'Mark all notifications as read')
+  .option('-p, --project <id>', 'Filter by project (with --all)')
+  .action(wrap(cmdNotificationMarkRead));
+
+program.command('notification-mark-unread').description('Mark notification(s) as unread')
+  .option('--id <id>', 'Notification ID')
+  .option('--all', 'Mark all notifications as unread')
+  .option('-p, --project <id>', 'Filter by project (with --all)')
+  .action(wrap(cmdNotificationMarkUnread));
 
 // Relations
 program.command('relation-list').description('List relations')
