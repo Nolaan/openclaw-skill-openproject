@@ -143,6 +143,231 @@ node {baseDir}/scripts/openproject.mjs notification-mark-unread --id 100
 node {baseDir}/scripts/openproject.mjs notification-mark-unread --all
 ```
 
+### Documents
+
+```bash
+node {baseDir}/scripts/openproject.mjs document-list
+node {baseDir}/scripts/openproject.mjs document-read --id 5
+node {baseDir}/scripts/openproject.mjs document-update --id 5 --title "Updated title"
+```
+
+### Revisions
+
+```bash
+node {baseDir}/scripts/openproject.mjs revision-read --id 10
+node {baseDir}/scripts/openproject.mjs revision-list-by-wp --wp-id 42
+```
+
+### Capabilities & Actions
+
+```bash
+node {baseDir}/scripts/openproject.mjs capability-list --principal me
+node {baseDir}/scripts/openproject.mjs capability-global
+node {baseDir}/scripts/openproject.mjs action-list
+node {baseDir}/scripts/openproject.mjs action-read --id work_packages/create
+```
+
+### My Preferences
+
+```bash
+node {baseDir}/scripts/openproject.mjs my-preferences-read
+node {baseDir}/scripts/openproject.mjs my-preferences-update --time-zone "Europe/Brussels" --comment-order desc
+```
+
+### Render
+
+```bash
+node {baseDir}/scripts/openproject.mjs render-markdown --text "**bold** and _italic_"
+node {baseDir}/scripts/openproject.mjs render-plain --text "plain text"
+```
+
+### Posts (Forum)
+
+```bash
+node {baseDir}/scripts/openproject.mjs post-read --id 5
+node {baseDir}/scripts/openproject.mjs post-attachment-list --id 5
+```
+
+### Reminders
+
+```bash
+node {baseDir}/scripts/openproject.mjs reminder-list
+node {baseDir}/scripts/openproject.mjs reminder-create --wp-id 42 --remind-at "2026-03-20T09:00:00Z" --note "Check status"
+node {baseDir}/scripts/openproject.mjs reminder-update --id 3 --remind-at "2026-03-21T09:00:00Z"
+node {baseDir}/scripts/openproject.mjs reminder-delete --id 3 --confirm
+```
+
+### Project Statuses
+
+```bash
+node {baseDir}/scripts/openproject.mjs project-status-read --id on_track
+```
+
+### Project Phases (Enterprise)
+
+```bash
+# List project phase definitions
+node {baseDir}/scripts/openproject.mjs project-phase-definition-list
+
+# Read a phase definition
+node {baseDir}/scripts/openproject.mjs project-phase-definition-read --id 1
+
+# Read a project phase
+node {baseDir}/scripts/openproject.mjs project-phase-read --id 5
+```
+
+### Portfolios (Enterprise)
+
+```bash
+# List portfolios
+node {baseDir}/scripts/openproject.mjs portfolio-list
+
+# Read a portfolio
+node {baseDir}/scripts/openproject.mjs portfolio-read --id 1
+
+# Update a portfolio
+node {baseDir}/scripts/openproject.mjs portfolio-update --id 1 --name "Q1 Portfolio"
+
+# Delete a portfolio (requires --confirm)
+node {baseDir}/scripts/openproject.mjs portfolio-delete --id 1 --confirm
+```
+
+### Programs (Enterprise)
+
+```bash
+# List programs
+node {baseDir}/scripts/openproject.mjs program-list
+
+# Read a program
+node {baseDir}/scripts/openproject.mjs program-read --id 1
+
+# Update a program
+node {baseDir}/scripts/openproject.mjs program-update --id 1 --name "Platform Program"
+
+# Delete a program (requires --confirm)
+node {baseDir}/scripts/openproject.mjs program-delete --id 1 --confirm
+```
+
+### Placeholder Users (Enterprise)
+
+```bash
+# List placeholder users
+node {baseDir}/scripts/openproject.mjs placeholder-user-list
+
+# Read a placeholder user
+node {baseDir}/scripts/openproject.mjs placeholder-user-read --id 10
+
+# Create a placeholder user
+node {baseDir}/scripts/openproject.mjs placeholder-user-create --name "Future Developer"
+
+# Update a placeholder user
+node {baseDir}/scripts/openproject.mjs placeholder-user-update --id 10 --name "Senior Developer"
+
+# Delete a placeholder user (requires --confirm)
+node {baseDir}/scripts/openproject.mjs placeholder-user-delete --id 10 --confirm
+```
+
+### Budgets (Enterprise)
+
+```bash
+# List project budgets
+node {baseDir}/scripts/openproject.mjs budget-list --project my-project
+
+# Read budget details
+node {baseDir}/scripts/openproject.mjs budget-read --id 3
+```
+
+### Meetings (Enterprise)
+
+```bash
+# Read a meeting
+node {baseDir}/scripts/openproject.mjs meeting-read --id 10
+
+# List meeting attachments
+node {baseDir}/scripts/openproject.mjs meeting-attachment-list --id 10
+
+# Upload attachment to a meeting
+node {baseDir}/scripts/openproject.mjs meeting-attachment-add --id 10 --file ./agenda.pdf
+```
+
+### Days (Working/Non-Working)
+
+```bash
+# Check if a date is a working day
+node {baseDir}/scripts/openproject.mjs day-read --date 2026-03-18
+
+# List days in a range
+node {baseDir}/scripts/openproject.mjs days-list --from 2026-03-01 --to 2026-03-31
+
+# List all non-working days (holidays)
+node {baseDir}/scripts/openproject.mjs non-working-days-list
+
+# View a non-working day
+node {baseDir}/scripts/openproject.mjs non-working-day-read --date 2026-12-25
+
+# Show week day schedule (which days are working)
+node {baseDir}/scripts/openproject.mjs week-days-list
+
+# View a specific week day
+node {baseDir}/scripts/openproject.mjs week-day-read --day 6
+```
+
+### Configuration
+
+```bash
+# View instance configuration
+node {baseDir}/scripts/openproject.mjs config-read
+
+# View project-specific configuration
+node {baseDir}/scripts/openproject.mjs project-config-read --project my-project
+```
+
+### OAuth
+
+```bash
+# Read an OAuth application
+node {baseDir}/scripts/openproject.mjs oauth-app-read --id 1
+
+# Read OAuth client credentials
+node {baseDir}/scripts/openproject.mjs oauth-credentials-read --id 1
+```
+
+### Help Texts
+
+```bash
+# List all attribute help texts
+node {baseDir}/scripts/openproject.mjs help-text-list
+
+# Read a help text
+node {baseDir}/scripts/openproject.mjs help-text-read --id 1
+```
+
+### Custom Fields & Options
+
+```bash
+# List items for a hierarchical custom field
+node {baseDir}/scripts/openproject.mjs custom-field-items --id 10
+
+# Read a custom field item
+node {baseDir}/scripts/openproject.mjs custom-field-item-read --id 25
+
+# Get a custom field item's branch (ancestors)
+node {baseDir}/scripts/openproject.mjs custom-field-item-branch --id 25
+
+# Read a custom option value
+node {baseDir}/scripts/openproject.mjs custom-option-read --id 3
+```
+
+### Custom Actions
+
+```bash
+# Read a custom action
+node {baseDir}/scripts/openproject.mjs custom-action-read --id 1
+
+# Execute a custom action on a work package
+node {baseDir}/scripts/openproject.mjs custom-action-execute --id 1 --wp-id 42
+```
+
 ### Groups
 
 ```bash
